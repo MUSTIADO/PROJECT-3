@@ -11,7 +11,7 @@ def register(username, password):
         user = User(username=username, password=password)
         session.add(user)
         session.commit()
-        print("User registered successfully.")
+        print("User registered successfullty.")
 
 # Login user
 def login(username, password):
@@ -49,11 +49,18 @@ def add_product(name, price):
     
 
 # List products
-def list_products():
+def list_products(product_id=None):
     with DBSession() as session:
-        products = session.query(Product).all()
-        for product in products:
-            print(f"Product ID: {product.id}, Name: {product.name}, Price: ${product.price}")
+        if product_id:
+            product = session.query(Product).filter_by(id=product_id).first()
+            if product:
+                print(f"Product ID: {product.id}, Name: {product.name}, Price: ${product.price}")
+            else:
+                print("Product not found.")
+        else:
+            products = session.query(Product).all()
+            for product in products:
+                print(f"Product ID: {product.id}, Name: {product.name}, Price: ${product.price}")
 
 # List users
 def list_users():
@@ -212,7 +219,7 @@ def main():
     print("1. Register")
     print("2. Login")
     print("3. Logout")
-    print("4. List Products")
+    print("4. List Products By ")
     print("5. List Users")
     print("6. Add to Cart")
     print("7. View Cart")
@@ -221,44 +228,65 @@ def main():
     print("10. Cancel Order")
     print("11. Update Order Status")
     print("12. Add Product")
-    print("13. Check Database Content")
+    print("13. List Products By ID")
+    print("14. Check The Database")
 
     action = input("Enter the number corresponding to the action: ")
 
     if action == '1':
-        register()
+        username = input("Enter username: ")
+        password = input("Enter password: ")
+        register(username, password)
+        
     elif action == '2':
-        login()
+        username = input("Enter username: ")
+        password = input("Enter password: ")
+        login(username, password)  # Call login function
+
     elif action == '3':
         logout()
     elif action == '4':
         list_products()
     elif action == '5':
         list_users()
+    
     elif action == '6':
-        add_to_cart()
+        product_id = input("Enter the product ID to add to cart: ")
+        add_to_cart(int(product_id))
+    
     elif action == '7':
         view_cart()
     elif action == '8':
         place_order()
     elif action == '9':
         view_orders()
+    
     elif action == '10':
-        cancel_order()
+        order_id = input("Enter the order ID to cancel: ")
+        cancel_order(int(order_id))
+    
     elif action == '11':
         update_order_status()
+    
     elif action == '12':
-        add_product()
-    elif action == '13':
+        name = input("Enter the product name: ")
+        price = float(input("Enter the product price: "))
+        add_product(name, price)
+        
+    elif action == '13':  # Option for finding product by ID
+        product_id = int(input("Enter the product ID to search: "))
+        list_products(product_id)     
+    
+    elif action == '14':
         check_database_content()
     else:
-        print("Invalid action number. Please choose a number between 1 and 13.")
+        print("Invalid action number. Please choose a number between 1 and 14.")
 
-def register():
-    print("You chose to register.")
+# def register():
+#     print("You chose to register.")
 
-def login():
-    print("You chose to login.")
+# def login():
+#     print("You chose to login.")
 
 # Implement other functions similarly
 
